@@ -146,7 +146,7 @@ void UsageFault_Handler(void)
 void SecureFault_Handler(void)
 {
   /* USER CODE BEGIN SecureFault_IRQn 0 */
-
+  BSP_LED_On(LED_RED);
   /* USER CODE END SecureFault_IRQn 0 */
   while (1)
   {
