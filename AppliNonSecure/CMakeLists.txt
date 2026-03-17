@@ -112,6 +112,6 @@ add_custom_command(
         TARGET ${CMAKE_PROJECT_NAME}
         POST_BUILD
         COMMAND ${STM32CubeProgrammerCLI_Path}
-        -bin ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.bin -nk -of 0x80000000 -hv 2.3 -dump ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.bin -align -o ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.signed.bin
+        -bin ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.bin -nk -of 0x80000000 -t fsbl -hv 2.3 -dump ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.signed.bin -align -o ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.signed.bin -s
         COMMENT "Signing .bin file"
 )

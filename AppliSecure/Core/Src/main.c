@@ -53,6 +53,8 @@ COM_InitTypeDef BspCOMInit;
 /* Private function prototypes -----------------------------------------------*/
 static void NonSecure_Init(void);
 static void MX_GPIO_Init(void);
+static void MX_BSEC_Init(void);
+static void MX_SAU_Init(void);
 static void SystemIsolation_Config(void);
 /* USER CODE BEGIN PFP */
 
@@ -96,6 +98,8 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_BSEC_Init();
+  MX_SAU_Init();
   SystemIsolation_Config();
   /* USER CODE BEGIN 2 */
 
@@ -147,6 +151,35 @@ static void NonSecure_Init(void)
 }
 
 /**
+  * @brief BSEC Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_BSEC_Init(void)
+{
+
+  /* USER CODE BEGIN BSEC_Init 0 */
+  BSEC_HandleTypeDef bsec_handle;
+  BSEC_DebugCfgTypeDef debug_cfg;
+  /* USER CODE END BSEC_Init 0 */
+
+  /* USER CODE BEGIN BSEC_Init 1 */
+  bsec_handle.Instance = BSEC;
+
+  debug_cfg.HDPL_Open_Dbg = HAL_BSEC_OPEN_DBG_LEVEL_3;
+  debug_cfg.Sec_Dbg_Auth = HAL_BSEC_SEC_DBG_AUTH;
+  debug_cfg.NonSec_Dbg_Auth = HAL_BSEC_NONSEC_DBG_AUTH;
+  /* USER CODE END BSEC_Init 1 */
+  /* USER CODE BEGIN BSEC_Init 2 */
+  if (HAL_BSEC_ConfigDebug(&bsec_handle, &debug_cfg) != HAL_OK) {
+    printf("%lu\n", bsec_handle.ErrorCode);
+    Error_Handler();
+  }
+  /* USER CODE END BSEC_Init 2 */
+
+}
+
+/**
   * @brief RIF Initialization Function
   * @param None
   * @retval None
@@ -175,6 +208,32 @@ static void NonSecure_Init(void)
   HAL_RIF_RISC_SetSlaveSecureAttributes(RIF_RISC_PERIPH_INDEX_ADC12 , RIF_ATTRIBUTE_SEC | RIF_ATTRIBUTE_NPRIV);
   HAL_RIF_RISC_SetSlaveSecureAttributes(RIF_RISC_PERIPH_INDEX_XSPI2 , RIF_ATTRIBUTE_SEC | RIF_ATTRIBUTE_NPRIV);
   HAL_RIF_RISC_SetSlaveSecureAttributes(RIF_RISC_PERIPH_INDEX_XSPIM , RIF_ATTRIBUTE_SEC | RIF_ATTRIBUTE_NPRIV);
+
+  /* RISAF Config */
+  RISAF_BaseRegionConfig_t risaf_base_config;
+  __HAL_RCC_RISAF_CLK_ENABLE();
+
+  /* set up base region configuration for CPUAXI_RAM1*/
+  /* region 1 is non-secure */
+  risaf_base_config.EndAddress = 0xfffff;
+  risaf_base_config.Filtering = RISAF_FILTER_ENABLE;
+  risaf_base_config.ReadWhitelist = 255;
+  risaf_base_config.WriteWhitelist = 255;
+  risaf_base_config.Secure = RIF_ATTRIBUTE_NSEC;
+  risaf_base_config.PrivWhitelist = RIF_CID_NONE;
+  risaf_base_config.StartAddress = 0x0000;
+  HAL_RIF_RISAF_ConfigBaseRegion(RISAF3, RISAF_REGION_1, &risaf_base_config);
+
+  /* set up base region configuration for CPUAXI_RAM0*/
+  /* region 1 is secure */
+  risaf_base_config.EndAddress = 0x9bfff;
+  risaf_base_config.Secure = RIF_ATTRIBUTE_SEC;
+  HAL_RIF_RISAF_ConfigBaseRegion(RISAF2, RISAF_REGION_1, &risaf_base_config);
+
+  /* set up base region configuration for FLEXRAM*/
+  /* region 1 is secure */
+  risaf_base_config.EndAddress = 0x63fff;
+  HAL_RIF_RISAF_ConfigBaseRegion(RISAF7, RISAF_REGION_1, &risaf_base_config);
 
   /* RIF-Aware IPs Config */
 
@@ -207,6 +266,27 @@ static void NonSecure_Init(void)
   /* USER CODE BEGIN RIF_Init 2 */
 
   /* USER CODE END RIF_Init 2 */
+
+}
+
+/**
+  * @brief SAU Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_SAU_Init(void)
+{
+
+  /* USER CODE BEGIN SAU_Init 0 */
+
+  /* USER CODE END SAU_Init 0 */
+
+  /* USER CODE BEGIN SAU_Init 1 */
+
+  /* USER CODE END SAU_Init 1 */
+  /* USER CODE BEGIN SAU_Init 2 */
+
+  /* USER CODE END SAU_Init 2 */
 
 }
 

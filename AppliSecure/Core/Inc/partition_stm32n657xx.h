@@ -35,6 +35,7 @@
 
 #ifndef PARTITION_STM32N657XX_H
 #define PARTITION_STM32N657XX_H
+
 /*
 //-------- <<< Use Configuration Wizard in Context Menu >>> -----------------
 */
@@ -168,18 +169,18 @@ extern uint32_t _eNSCVeneer;
 /*
 //     <o>Start Address <0-0xFFFFFFE0>
 */
-#define SAU_INIT_START2     0x40000000      /* start address of SAU region 2 */
+#define SAU_INIT_START2     0x34000000      /* start address of SAU region 2 */
 
 /*
 //     <o>End Address <0x1F-0xFFFFFFFF>
 */
-#define SAU_INIT_END2       0x40027FFF      /* end address of SAU region 2 */
+#define SAU_INIT_END2       0x340FFFFF      /* end address of SAU region 2 */
 /*
 //     <o>Region is
 //         <0=>Non-Secure
 //         <1=>Secure, Non-Secure Callable
 */
-#define SAU_INIT_NSC2       0
+#define SAU_INIT_NSC2       1
 /*
 //   </e>
 */
@@ -193,12 +194,12 @@ extern uint32_t _eNSCVeneer;
 /*
 //     <o>Start Address <0-0xFFFFFFE0>
 */
-#define SAU_INIT_START3     0x40000000      /* start address of SAU region 3 */
+#define SAU_INIT_START3     0x24100000      /* start address of SAU region 3 */
 
 /*
 //     <o>End Address <0x1F-0xFFFFFFFF>
 */
-#define SAU_INIT_END3       0x4FFFFFFF      /* end address of SAU region 3 */
+#define SAU_INIT_END3       0x241FFFFF      /* end address of SAU region 3 */
 
 /*
 //     <o>Region is
@@ -219,12 +220,12 @@ extern uint32_t _eNSCVeneer;
 /*
 //     <o>Start Address <0-0xFFFFFFE0>
 */
-#define SAU_INIT_START4     0x00000000      /* start address of SAU region 4 */
+#define SAU_INIT_START4     0x40000000      /* start address of SAU region 4 */
 
 /*
 //     <o>End Address <0x1F-0xFFFFFFFF>
 */
-#define SAU_INIT_END4       0x3FFFFFFF      /* end address of SAU region 4 */
+#define SAU_INIT_END4       0x4FFFFFFF      /* end address of SAU region 4 */
 /*
 //     <o>Region is
 //         <0=>Non-Secure
@@ -239,7 +240,7 @@ extern uint32_t _eNSCVeneer;
 //   <e>Initialize SAU Region 5
 //   <i> Setup SAU Region 5 memory attributes
 */
-#define SAU_INIT_REGION5    1
+#define SAU_INIT_REGION5    0
 
 /*
 //     <o>Start Address <0-0xFFFFFFE0>
@@ -249,7 +250,7 @@ extern uint32_t _eNSCVeneer;
 /*
 //     <o>End Address <0x1F-0xFFFFFFFF>
 */
-#define SAU_INIT_END5       0x00018FFF      /* end address of SAU region 5 */
+#define SAU_INIT_END5       0x00000000      /* end address of SAU region 5 */
 /*
 //     <o>Region is
 //         <0=>Non-Secure
