@@ -250,7 +250,7 @@ extern uint32_t _eNSCVeneer;
 /*
 //     <o>End Address <0x1F-0xFFFFFFFF>
 */
-#define SAU_INIT_END5       0x00000000      /* end address of SAU region 5 */
+#define SAU_INIT_END5       0x00018FFF      /* end address of SAU region 5 */
 /*
 //     <o>Region is
 //         <0=>Non-Secure

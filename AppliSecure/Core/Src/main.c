@@ -21,7 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "stm32n6xx_hal_rif.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -53,7 +53,6 @@ COM_InitTypeDef BspCOMInit;
 /* Private function prototypes -----------------------------------------------*/
 static void NonSecure_Init(void);
 static void MX_GPIO_Init(void);
-static void MX_BSEC_Init(void);
 static void MX_SAU_Init(void);
 static void SystemIsolation_Config(void);
 /* USER CODE BEGIN PFP */
@@ -73,6 +72,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
+  SCB->SHCSR |= (SCB_SHCSR_BUSFAULTENA_Msk | SCB_SHCSR_SECUREFAULTENA_Msk);
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -98,7 +98,6 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_BSEC_Init();
   MX_SAU_Init();
   SystemIsolation_Config();
   /* USER CODE BEGIN 2 */
@@ -148,35 +147,6 @@ static void NonSecure_Init(void)
 
   /* Start non-secure state software application */
   NonSecure_ResetHandler();
-}
-
-/**
-  * @brief BSEC Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_BSEC_Init(void)
-{
-
-  /* USER CODE BEGIN BSEC_Init 0 */
-  BSEC_HandleTypeDef bsec_handle;
-  BSEC_DebugCfgTypeDef debug_cfg;
-  /* USER CODE END BSEC_Init 0 */
-
-  /* USER CODE BEGIN BSEC_Init 1 */
-  bsec_handle.Instance = BSEC;
-
-  debug_cfg.HDPL_Open_Dbg = HAL_BSEC_OPEN_DBG_LEVEL_3;
-  debug_cfg.Sec_Dbg_Auth = HAL_BSEC_SEC_DBG_AUTH;
-  debug_cfg.NonSec_Dbg_Auth = HAL_BSEC_NONSEC_DBG_AUTH;
-  /* USER CODE END BSEC_Init 1 */
-  /* USER CODE BEGIN BSEC_Init 2 */
-  if (HAL_BSEC_ConfigDebug(&bsec_handle, &debug_cfg) != HAL_OK) {
-    printf("%lu\n", bsec_handle.ErrorCode);
-    Error_Handler();
-  }
-  /* USER CODE END BSEC_Init 2 */
-
 }
 
 /**
@@ -302,9 +272,8 @@ static void MX_GPIO_Init(void)
   /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOB_CLK_ENABLE();
-  __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 

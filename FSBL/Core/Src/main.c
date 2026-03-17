@@ -54,7 +54,6 @@ XSPI_HandleTypeDef hxspi2;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_XSPI2_Init(void);
-static void MX_BSEC_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -74,6 +73,14 @@ int main(void)
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
+
+  /* Enable the CPU Cache */
+
+  /* Enable I-Cache---------------------------------------------------------*/
+  SCB_EnableICache();
+
+  /* Enable D-Cache---------------------------------------------------------*/
+  SCB_EnableDCache();
 
   /* MCU Configuration--------------------------------------------------------*/
   HAL_Init();
@@ -100,7 +107,6 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_XSPI2_Init();
-  MX_BSEC_Init();
   MX_EXTMEM_MANAGER_Init();
   /* USER CODE BEGIN 2 */
 
@@ -254,35 +260,6 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-}
-
-/**
-  * @brief BSEC Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_BSEC_Init(void)
-{
-
-  /* USER CODE BEGIN BSEC_Init 0 */
-  BSEC_HandleTypeDef bsec_handle;
-  BSEC_DebugCfgTypeDef debug_cfg;
-  /* USER CODE END BSEC_Init 0 */
-
-  /* USER CODE BEGIN BSEC_Init 1 */
-  bsec_handle.Instance = BSEC;
-
-  debug_cfg.HDPL_Open_Dbg = HAL_BSEC_OPEN_DBG_LEVEL_3;
-  debug_cfg.Sec_Dbg_Auth = HAL_BSEC_SEC_DBG_AUTH;
-  debug_cfg.NonSec_Dbg_Auth = HAL_BSEC_NONSEC_DBG_AUTH;
-  /* USER CODE END BSEC_Init 1 */
-  /* USER CODE BEGIN BSEC_Init 2 */
-  if (HAL_BSEC_ConfigDebug(&bsec_handle, &debug_cfg) != HAL_OK) {
-    printf("%lu\n", bsec_handle.ErrorCode);
-    Error_Handler();
-  }
-  /* USER CODE END BSEC_Init 2 */
-
 }
 
 /**
