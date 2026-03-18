@@ -453,7 +453,7 @@ extern uint32_t _eNSCVeneer;
 /*
 / Interrupts 32..63
 //   <o.0>  EXTI12_IRQn       <0=> Secure state
-//   <o.1>  EXTI13_IRQn       <0=> Secure state
+//   <o.1>  EXTI13_IRQn       <1=> Non-Secure state
 //   <o.2>  EXTI14_IRQn       <0=> Secure state
 //   <o.3>  EXTI15_IRQn       <0=> Secure state
 //   <o.4>  SAES_IRQn          <0=> Secure state
@@ -486,7 +486,7 @@ extern uint32_t _eNSCVeneer;
 //   <o.31> GFXMMU_IRQn       <0=> Secure state
 */
 
-#define NVIC_INIT_ITNS1_VAL      0x00000000
+#define NVIC_INIT_ITNS1_VAL      0x00000002
 
 /*
 //   </e>

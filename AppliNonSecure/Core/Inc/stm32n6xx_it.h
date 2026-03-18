@@ -51,6 +51,7 @@ void UsageFault_Handler(void);
 void SecureFault_Handler(void);
 void RCC_IRQHandler(void);
 void FPU_IRQHandler(void);
+void EXTI13_IRQHandler(void);
 void TIM14_IRQHandler(void);
 /* USER CODE BEGIN EFP */
 
