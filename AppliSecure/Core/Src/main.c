@@ -22,6 +22,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stm32n6xx_hal_rif.h"
+#include <stdio.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -89,7 +90,7 @@ int main(void)
   MX_SAU_Init();
   SystemIsolation_Config();
   /* USER CODE BEGIN 2 */
-
+  printf("[Secure] HAL initialized, GPIO/SAU/RIF configured\r\n");
   /* USER CODE END 2 */
 
   /* Secure SysTick should rather be suspended before calling non-secure  */
@@ -293,7 +294,12 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+int __io_putchar(int ch)
+{
+  while (!(LPUART1->ISR & USART_ISR_TXE_TXFNF)) {}
+  LPUART1->TDR = (uint8_t)ch;
+  return ch;
+}
 /* USER CODE END 4 */
 
 /**
@@ -325,7 +331,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
+  printf("[Secure] ERROR: Error_Handler called\r\n");
   __disable_irq();
   while (1)
   {

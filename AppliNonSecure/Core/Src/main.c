@@ -22,7 +22,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <stdio.h>
+#include "secure_nsc.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -83,7 +84,8 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-
+  printf("[NS] Non-secure application started\r\n");
+  printf("[NS] GPIO initialized (button PC13, LED PG0)\r\n");
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -95,6 +97,7 @@ int main(void)
   osKernelStart();
 
   /* We should never get here as control is now taken by the scheduler */
+  printf("[NS] ERROR: Scheduler exited unexpectedly\r\n");
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -155,7 +158,11 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+int __io_putchar(int ch)
+{
+  SECURE_PutChar(ch);
+  return ch;
+}
 /* USER CODE END 4 */
 
 /**
@@ -187,7 +194,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
+  printf("[NS] ERROR: Error_Handler called\r\n");
   __disable_irq();
   while (1)
   {

@@ -1,6 +1,7 @@
 #include "audio_io.h"
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 extern UART_HandleTypeDef huart1;
 extern DMA_HandleTypeDef handle_GPDMA1_Channel14;
@@ -57,7 +58,10 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
     osSemaphoreRelease(rx_sem);
 
     /* Restart reception */
-    HAL_UARTEx_ReceiveToIdle_DMA(&huart1, rx_buf, AUDIO_IO_RX_BUF_SIZE);
+    if (HAL_UARTEx_ReceiveToIdle_DMA(&huart1, rx_buf, AUDIO_IO_RX_BUF_SIZE) != HAL_OK)
+    {
+      printf("[Audio] ERROR: Failed to restart DMA reception\r\n");
+    }
   }
 }
 
@@ -70,6 +74,11 @@ void audioIoTask(void *argument)
   (void)argument;
 
   rx_sem = osSemaphoreNew(1, 0, NULL);
+  if (rx_sem == NULL)
+  {
+    printf("[Audio] ERROR: Failed to create rx semaphore\r\n");
+    return;
+  }
 
   /* Enable interrupts from task context (after scheduler is running) */
   HAL_NVIC_SetPriority(GPDMA1_Channel14_IRQn, 5, 0);
@@ -78,7 +87,11 @@ void audioIoTask(void *argument)
   HAL_NVIC_EnableIRQ(LPUART1_IRQn);
 
   /* Start first DMA reception (idle-line terminated) */
-  HAL_UARTEx_ReceiveToIdle_DMA(&huart1, rx_buf, AUDIO_IO_RX_BUF_SIZE);
+  if (HAL_UARTEx_ReceiveToIdle_DMA(&huart1, rx_buf, AUDIO_IO_RX_BUF_SIZE) != HAL_OK)
+  {
+    printf("[Audio] ERROR: Failed to start DMA reception\r\n");
+  }
+  printf("[Audio] Audio I/O task started, DMA reception active\r\n");
 
   for (;;)
   {
@@ -92,9 +105,14 @@ void audioIoTask(void *argument)
 
       if (sampleCount > 0)
       {
+        printf("[Audio] Received %u samples, processing\r\n", sampleCount);
         audioDspProcess(input_samples, output_samples, sampleCount);
 
         /* TODO: do something with output_samples (e.g. transmit back, feed DAC) */
+      }
+      else
+      {
+        printf("[Audio] Received %u bytes but parsed 0 samples\r\n", len);
       }
     }
   }

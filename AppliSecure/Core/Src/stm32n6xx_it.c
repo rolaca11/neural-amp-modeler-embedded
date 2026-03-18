@@ -22,6 +22,7 @@
 #include "stm32n6xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <stdio.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -85,7 +86,7 @@ void NMI_Handler(void)
 void HardFault_Handler(void)
 {
   /* USER CODE BEGIN HardFault_IRQn 0 */
-
+  printf("[Secure] FAULT: HardFault (SCB->HFSR=0x%08lx)\r\n", SCB->HFSR);
   /* USER CODE END HardFault_IRQn 0 */
   while (1)
   {
@@ -100,7 +101,7 @@ void HardFault_Handler(void)
 void MemManage_Handler(void)
 {
   /* USER CODE BEGIN MemoryManagement_IRQn 0 */
-
+  printf("[Secure] FAULT: MemManage (SCB->CFSR=0x%08lx)\r\n", SCB->CFSR);
   /* USER CODE END MemoryManagement_IRQn 0 */
   while (1)
   {
@@ -115,7 +116,7 @@ void MemManage_Handler(void)
 void BusFault_Handler(void)
 {
   /* USER CODE BEGIN BusFault_IRQn 0 */
-
+  printf("[Secure] FAULT: BusFault (SCB->CFSR=0x%08lx)\r\n", SCB->CFSR);
   /* USER CODE END BusFault_IRQn 0 */
   while (1)
   {
@@ -130,7 +131,7 @@ void BusFault_Handler(void)
 void UsageFault_Handler(void)
 {
   /* USER CODE BEGIN UsageFault_IRQn 0 */
-
+  printf("[Secure] FAULT: UsageFault (SCB->CFSR=0x%08lx)\r\n", SCB->CFSR);
   /* USER CODE END UsageFault_IRQn 0 */
   while (1)
   {
@@ -145,7 +146,7 @@ void UsageFault_Handler(void)
 void SecureFault_Handler(void)
 {
   /* USER CODE BEGIN SecureFault_IRQn 0 */
-
+  printf("[Secure] FAULT: SecureFault (SAU->SFSR=0x%08lx)\r\n", SAU->SFSR);
   /* USER CODE END SecureFault_IRQn 0 */
   while (1)
   {

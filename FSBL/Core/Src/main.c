@@ -105,7 +105,9 @@ int main(void)
   MX_LPUART1_UART_Init();
   MX_EXTMEM_MANAGER_Init();
   /* USER CODE BEGIN 2 */
-
+  printf("\r\n[FSBL] Boot started\r\n");
+  printf("[FSBL] Clock configured, peripherals initialized\r\n");
+  printf("[FSBL] External memory manager initialized\r\n");
   /* USER CODE END 2 */
 
   /* Launch the application */
@@ -464,6 +466,7 @@ int __io_putchar(int ch)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
+  printf("[FSBL] ERROR: Error_Handler called\r\n");
   __disable_irq();
   while (1)
   {

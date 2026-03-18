@@ -22,7 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <stdio.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -92,6 +92,7 @@ void MX_FREERTOS_Init(void) {
     .stack_size = 1024 * 4
   };
   buttonTaskHandle = osThreadNew(ButtonTask, NULL, &buttonTask_attributes);
+  printf("[NS] RTOS tasks created (defaultTask, buttonTask)\r\n");
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */
@@ -121,10 +122,12 @@ void StartDefaultTask(void *argument)
 static void ButtonTask(void *argument)
 {
   (void)argument;
+  printf("[NS] ButtonTask running\r\n");
   for (;;)
   {
     osThreadFlagsWait(0x01, osFlagsWaitAny, osWaitForever);
     HAL_GPIO_TogglePin(GREEN_LED_GPIO_Port, GREEN_LED_Pin);
+    printf("[NS] Button pressed, LED toggled\r\n");
   }
 }
 
