@@ -89,6 +89,8 @@ void Error_Handler(void);
 #define TRACED3_GPIO_Port GPIOB
 #define TRACED2_Pin GPIO_PIN_6
 #define TRACED2_GPIO_Port GPIOB
+#define BUTTON_Pin GPIO_PIN_13
+#define BUTTON_GPIO_Port GPIOC
 #define TRACECLK_Pin GPIO_PIN_3
 #define TRACECLK_GPIO_Port GPIOB
 #define TRACED0_Pin GPIO_PIN_3
