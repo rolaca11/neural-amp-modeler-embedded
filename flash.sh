@@ -20,9 +20,6 @@ fsbl_bin="FSBL/build/stm32n6-test_FSBL.signed.bin"
 appli_s_bin="AppliSecure/build/stm32n6-test_AppliSecure.signed.bin"
 appli_ns_bin="AppliNonSecure/build/stm32n6-test_AppliNonSecure.signed.bin"
 
-# Log file
-flash_log="flash_programming.log"
-
 # CubeProgrammer connection
 connect_reset="-c port=SWD ap=1"
 
@@ -30,11 +27,10 @@ connect_reset="-c port=SWD ap=1"
 
 error()
 {
-    echo "       Error when trying to $action" >> "$flash_log"
-    echo "       Flash programming aborted" >> "$flash_log"
+    echo "       Error when trying to $action"
+    echo "       Flash programming aborted"
     echo "Error when trying to $action"
     echo "Flash programming aborted"
-    echo "See $flash_log for details. Then try again."
     echo
     exit 1
 }
