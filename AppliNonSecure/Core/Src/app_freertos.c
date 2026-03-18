@@ -104,11 +104,11 @@ void MX_FREERTOS_Init(void) {
 void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN defaultTask */
-  BSP_LED_Init(LED_GREEN);
+
   /* Infinite loop */
   for(;;)
   {
-    BSP_LED_Toggle(LED_GREEN);
+    HAL_GPIO_TogglePin(GREEN_LED_GPIO_Port, GREEN_LED_Pin);
     osDelay(300);
   }
   /* USER CODE END defaultTask */

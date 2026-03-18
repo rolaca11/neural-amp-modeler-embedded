@@ -37,9 +37,6 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "stm32n6xx_hal.h"
 
-#include "stm32n6xx_nucleo.h"
-#include <stdio.h>
-
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -90,8 +87,12 @@ void Error_Handler(void);
 #define TRACED0_GPIO_Port GPIOE
 #define JTDI_Pin GPIO_PIN_15
 #define JTDI_GPIO_Port GPIOA
+#define GREEN_LED_Pin GPIO_PIN_0
+#define GREEN_LED_GPIO_Port GPIOG
 #define SWCLK_Pin GPIO_PIN_14
 #define SWCLK_GPIO_Port GPIOA
+#define BLUE_LED_Pin GPIO_PIN_8
+#define BLUE_LED_GPIO_Port GPIOG
 #define SWDIO_Pin GPIO_PIN_13
 #define SWDIO_GPIO_Port GPIOA
 #define SWO_Pin GPIO_PIN_5
