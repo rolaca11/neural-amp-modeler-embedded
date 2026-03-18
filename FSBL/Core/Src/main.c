@@ -445,6 +445,9 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(USB1_OCP_GPIO_Port, &GPIO_InitStruct);
 
+  /*IO attributes management functions */
+  HAL_GPIO_ConfigPinAttributes(GPIOE, GPIO_PIN_5|GPIO_PIN_6, GPIO_PIN_NSEC);
+
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 
   /* USER CODE END MX_GPIO_Init_2 */

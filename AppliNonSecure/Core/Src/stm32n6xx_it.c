@@ -101,7 +101,7 @@ void UsageFault_Handler(void)
 void SecureFault_Handler(void)
 {
   /* USER CODE BEGIN SecureFault_IRQn 0 */
-  printf("[NS] FAULT: SecureFault (SAU->SFSR=0x%08lx)\r\n", SAU->SFSR);
+  printf("[NS] FAULT: SecureFault \r\n");
   /* USER CODE END SecureFault_IRQn 0 */
   while (1)
   {
