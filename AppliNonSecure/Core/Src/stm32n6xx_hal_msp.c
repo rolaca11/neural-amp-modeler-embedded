@@ -79,10 +79,13 @@ void HAL_MspInit(void)
   HAL_NVIC_EnableIRQ(FPU_IRQn);
 
   HAL_PWREx_EnableVddIO2();
+  HAL_PWREx_ConfigVddIORange(PWR_VDDIO2,PWR_VDDIO_RANGE_1V8);
 
   HAL_PWREx_EnableVddIO3();
+  HAL_PWREx_ConfigVddIORange(PWR_VDDIO3,PWR_VDDIO_RANGE_1V8);
 
   HAL_PWREx_EnableVddIO4();
+  HAL_PWREx_ConfigVddIORange(PWR_VDDIO4,PWR_VDDIO_RANGE_3V3);
 
   /* USER CODE BEGIN MspInit 1 */
 

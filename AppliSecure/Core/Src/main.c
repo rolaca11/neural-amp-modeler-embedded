@@ -194,6 +194,9 @@ static void NonSecure_Init(void)
 
   /* RIF-Aware IPs Config */
 
+  /* set up PWR configuration */
+  HAL_PWR_ConfigAttributes(PWR_ITEM_0,PWR_SEC_NPRIV);
+
   /* set up GPIO configuration */
   HAL_GPIO_ConfigPinAttributes(GPIOA,GPIO_PIN_5,GPIO_PIN_SEC|GPIO_PIN_NPRIV);
   HAL_GPIO_ConfigPinAttributes(GPIOA,GPIO_PIN_7,GPIO_PIN_SEC|GPIO_PIN_NPRIV);
