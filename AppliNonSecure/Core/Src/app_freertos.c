@@ -42,7 +42,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-static osSemaphoreId_t buttonSemHandle;
+static osThreadId_t buttonTaskHandle;
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
@@ -72,7 +72,7 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE END RTOS_MUTEX */
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
-  buttonSemHandle = osSemaphoreNew(1, 0, NULL);
+
   /* USER CODE END RTOS_SEMAPHORES */
 
   /* USER CODE BEGIN RTOS_TIMERS */
@@ -91,7 +91,7 @@ void MX_FREERTOS_Init(void) {
     .priority = (osPriority_t) osPriorityAboveNormal,
     .stack_size = 1024 * 4
   };
-  osThreadNew(ButtonTask, NULL, &buttonTask_attributes);
+  buttonTaskHandle = osThreadNew(ButtonTask, NULL, &buttonTask_attributes);
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */
@@ -123,7 +123,7 @@ static void ButtonTask(void *argument)
   (void)argument;
   for (;;)
   {
-    osSemaphoreAcquire(buttonSemHandle, osWaitForever);
+    osThreadFlagsWait(0x01, osFlagsWaitAny, osWaitForever);
     HAL_GPIO_TogglePin(GREEN_LED_GPIO_Port, GREEN_LED_Pin);
   }
 }
@@ -132,7 +132,7 @@ void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin)
 {
   if (GPIO_Pin == BUTTON_Pin)
   {
-    osSemaphoreRelease(buttonSemHandle);
+    osThreadFlagsSet(buttonTaskHandle, 0x01);
   }
 }
 /* USER CODE END Application */
