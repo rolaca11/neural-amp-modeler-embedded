@@ -333,9 +333,6 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(BLUE_LED_GPIO_Port, BLUE_LED_Pin, GPIO_PIN_SET);
 
-  /*IO attributes management functions */
-  HAL_GPIO_ConfigPinAttributes(GPIOE, GPIO_PIN_5|GPIO_PIN_6, GPIO_PIN_NSEC);
-
   /*Configure GPIO pin : BLUE_LED_Pin */
   GPIO_InitStruct.Pin = BLUE_LED_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;

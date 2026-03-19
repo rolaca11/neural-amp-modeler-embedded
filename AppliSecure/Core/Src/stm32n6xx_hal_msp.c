@@ -90,6 +90,7 @@ void HAL_MspInit(void)
   */
 void HAL_UART_MspInit(UART_HandleTypeDef* huart)
 {
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
   RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
   if(huart->Instance==LPUART1)
   {
@@ -114,7 +115,12 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     PE5     ------> LPUART1_TX
     PE6     ------> LPUART1_RX
     */
-    HAL_GPIO_ConfigPinAttributes(GPIOE, GPIO_PIN_5|GPIO_PIN_6, GPIO_PIN_NSEC);
+    GPIO_InitStruct.Pin = GPIO_PIN_5|GPIO_PIN_6;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    GPIO_InitStruct.Alternate = GPIO_AF3_LPUART1;
+    HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
     /* USER CODE BEGIN LPUART1_MspInit 1 */
 
