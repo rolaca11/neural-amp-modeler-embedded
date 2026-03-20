@@ -548,7 +548,7 @@ extern uint32_t _eNSCVeneer;
 //   <o.0>  GPDMA1_Channel12_IRQn   <0=> Secure state
 //   <o.1>  GPDMA1_Channel13_IRQn   <0=> Secure state
 //   <o.2>  GPDMA1_Channel14_IRQn   <0=> Secure state
-//   <o.3>  GPDMA1_Channel15_IRQn   <0=> Secure state
+//   <o.3>  GPDMA1_Channel15_IRQn   <1=> Non-Secure state
 //   <o.4>  I2C1_EV_IRQn            <0=> Secure state
 //   <o.5>  I2C1_ER_IRQn            <0=> Secure state
 //   <o.6>  I2C2_EV_IRQn            <0=> Secure state
@@ -579,7 +579,7 @@ extern uint32_t _eNSCVeneer;
 //   <o.31> TIM10_IRQn              <0=> Secure state
 */
 
-#define NVIC_INIT_ITNS3_VAL      0x00000000
+#define NVIC_INIT_ITNS3_VAL      0x00000008
 
 /*
 //   </e>

@@ -53,6 +53,7 @@ void BusFault_Handler(void);
 void UsageFault_Handler(void);
 void SecureFault_Handler(void);
 void DebugMon_Handler(void);
+void GPDMA1_Channel15_IRQHandler(void);
 void TIM15_IRQHandler(void);
 /* USER CODE BEGIN EFP */
 

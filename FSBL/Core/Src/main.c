@@ -45,6 +45,10 @@
 /* Private variables ---------------------------------------------------------*/
 
 UART_HandleTypeDef hlpuart1;
+DMA_NodeTypeDef Node_GPDMA1_Channel15 __NON_CACHEABLE;
+DMA_QListTypeDef List_GPDMA1_Channel15;
+DMA_HandleTypeDef handle_GPDMA1_Channel15;
+DMA_HandleTypeDef handle_GPDMA1_Channel14;
 
 XSPI_HandleTypeDef hxspi2;
 
@@ -55,6 +59,7 @@ XSPI_HandleTypeDef hxspi2;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_GPDMA1_Init(void);
 static void MX_XSPI2_Init(void);
 static void MX_LPUART1_UART_Init(void);
 /* USER CODE BEGIN PFP */
@@ -101,6 +106,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_GPDMA1_Init();
   MX_XSPI2_Init();
   MX_LPUART1_UART_Init();
   MX_EXTMEM_MANAGER_Init();
@@ -238,6 +244,34 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+}
+
+/**
+  * @brief GPDMA1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_GPDMA1_Init(void)
+{
+
+  /* USER CODE BEGIN GPDMA1_Init 0 */
+
+  /* USER CODE END GPDMA1_Init 0 */
+
+  /* Peripheral clock enable */
+  __HAL_RCC_GPDMA1_CLK_ENABLE();
+
+  /* GPDMA1 interrupt Init */
+    HAL_NVIC_SetPriority(GPDMA1_Channel15_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(GPDMA1_Channel15_IRQn);
+
+  /* USER CODE BEGIN GPDMA1_Init 1 */
+
+  /* USER CODE END GPDMA1_Init 1 */
+  /* USER CODE BEGIN GPDMA1_Init 2 */
+
+  /* USER CODE END GPDMA1_Init 2 */
+
 }
 
 /**

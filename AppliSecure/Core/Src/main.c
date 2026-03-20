@@ -46,6 +46,10 @@
 /* Private variables ---------------------------------------------------------*/
 
 UART_HandleTypeDef hlpuart1;
+DMA_NodeTypeDef Node_GPDMA1_Channel15 __NON_CACHEABLE;
+DMA_QListTypeDef List_GPDMA1_Channel15;
+DMA_HandleTypeDef handle_GPDMA1_Channel15;
+DMA_HandleTypeDef handle_GPDMA1_Channel14;
 
 /* USER CODE BEGIN PV */
 
@@ -54,6 +58,7 @@ UART_HandleTypeDef hlpuart1;
 /* Private function prototypes -----------------------------------------------*/
 static void NonSecure_Init(void);
 static void MX_GPIO_Init(void);
+static void MX_GPDMA1_Init(void);
 static void MX_SAU_Init(void);
 static void MX_LPUART1_UART_Init(void);
 static void SystemIsolation_Config(void);
@@ -90,6 +95,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_GPDMA1_Init();
   MX_SAU_Init();
   MX_LPUART1_UART_Init();
   SystemIsolation_Config();
@@ -139,6 +145,34 @@ static void NonSecure_Init(void)
 
   /* Start non-secure state software application */
   NonSecure_ResetHandler();
+}
+
+/**
+  * @brief GPDMA1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_GPDMA1_Init(void)
+{
+
+  /* USER CODE BEGIN GPDMA1_Init 0 */
+
+  /* USER CODE END GPDMA1_Init 0 */
+
+  /* Peripheral clock enable */
+  __HAL_RCC_GPDMA1_CLK_ENABLE();
+
+  /* GPDMA1 interrupt Init */
+    HAL_NVIC_SetPriority(GPDMA1_Channel15_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(GPDMA1_Channel15_IRQn);
+
+  /* USER CODE BEGIN GPDMA1_Init 1 */
+
+  /* USER CODE END GPDMA1_Init 1 */
+  /* USER CODE BEGIN GPDMA1_Init 2 */
+
+  /* USER CODE END GPDMA1_Init 2 */
+
 }
 
 /**
@@ -250,6 +284,18 @@ static void MX_LPUART1_UART_Init(void)
   /* set up PWR configuration */
   HAL_PWR_ConfigAttributes(PWR_ITEM_0,PWR_SEC_NPRIV);
 
+  /* set up GPDMA configuration */
+  /* set GPDMA1 channel 14 used by LPUART1 */
+  if (HAL_DMA_ConfigChannelAttributes(&handle_GPDMA1_Channel14,DMA_CHANNEL_NSEC|DMA_CHANNEL_PRIV|DMA_CHANNEL_SRC_NSEC|DMA_CHANNEL_DEST_NSEC)!= HAL_OK )
+  {
+    Error_Handler();
+  }
+  /* set GPDMA1 channel 15 used by LPUART1 */
+  if (HAL_DMA_ConfigChannelAttributes(&handle_GPDMA1_Channel15,DMA_CHANNEL_NSEC|DMA_CHANNEL_PRIV|DMA_CHANNEL_SRC_NSEC|DMA_CHANNEL_DEST_NSEC)!= HAL_OK )
+  {
+    Error_Handler();
+  }
+
   /* set up GPIO configuration */
   HAL_GPIO_ConfigPinAttributes(GPIOA,GPIO_PIN_5,GPIO_PIN_SEC|GPIO_PIN_NPRIV);
   HAL_GPIO_ConfigPinAttributes(GPIOA,GPIO_PIN_7,GPIO_PIN_SEC|GPIO_PIN_NPRIV);
@@ -326,9 +372,9 @@ static void MX_GPIO_Init(void)
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOE_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOG_CLK_ENABLE();
-  __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(BLUE_LED_GPIO_Port, BLUE_LED_Pin, GPIO_PIN_SET);

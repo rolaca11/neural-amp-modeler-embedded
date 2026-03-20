@@ -23,6 +23,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
+#include "fir_filter.h"
+#include "uart_io.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -32,7 +34,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define FIR_NUM_TAPS      5
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -43,6 +45,9 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
 static osThreadId_t buttonTaskHandle;
+static osThreadId_t firTaskHandle;
+
+extern UART_HandleTypeDef hlpuart1;
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
@@ -55,6 +60,7 @@ const osThreadAttr_t defaultTask_attributes = {
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
 static void ButtonTask(void *argument);
+static void FirUartTask(void *argument);
 /* USER CODE END FunctionPrototypes */
 
 /**
@@ -92,7 +98,14 @@ void MX_FREERTOS_Init(void) {
     .stack_size = 1024 * 4
   };
   buttonTaskHandle = osThreadNew(ButtonTask, NULL, &buttonTask_attributes);
-  printf("[NS] RTOS tasks created (defaultTask, buttonTask)\r\n");
+
+  const osThreadAttr_t firTask_attributes = {
+    .name = "firTask",
+    .priority = (osPriority_t) osPriorityNormal,
+    .stack_size = 2048 * 4
+  };
+  firTaskHandle = osThreadNew(FirUartTask, NULL, &firTask_attributes);
+  printf("[NS] RTOS tasks created (defaultTask, buttonTask, firTask)\r\n");
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */
@@ -136,6 +149,44 @@ void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin)
   if (GPIO_Pin == BUTTON_Pin)
   {
     osThreadFlagsSet(buttonTaskHandle, 0x01);
+  }
+}
+
+static void FirUartTask(void *argument)
+{
+  (void)argument;
+
+  static const float32_t firCoeffs[FIR_NUM_TAPS] = {
+    0.2f, 0.2f, 0.2f, 0.2f, 0.2f
+  };
+
+  static FIR_HandleTypeDef hfir;
+  static float32_t inBuf[UART_IO_MAX_SAMPLES];
+  static float32_t outBuf[UART_IO_MAX_SAMPLES];
+
+  if (FIR_Init(&hfir, FIR_NUM_TAPS, firCoeffs, UART_IO_MAX_SAMPLES) != FIR_OK)
+  {
+    printf("[FIR] ERROR: Filter init failed\r\n");
+    return;
+  }
+
+  UartIo_Init(&hlpuart1);
+  printf("[FIR] Ready, send comma-separated numbers over LPUART1\r\n");
+
+  for (;;)
+  {
+    uint16_t count = UartIo_Receive(inBuf, UART_IO_MAX_SAMPLES);
+    if (count == 0)
+      continue;
+
+    if (FIR_Process(&hfir, inBuf, outBuf, count) != FIR_OK)
+    {
+      printf("[FIR] ERROR: Process failed\r\n");
+      continue;
+    }
+
+    UartIo_SendSamples("[FIR] In ", inBuf, count);
+    UartIo_SendSamples("[FIR] Out", outBuf, count);
   }
 }
 /* USER CODE END Application */
