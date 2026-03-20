@@ -89,6 +89,7 @@ endif()
 
 # Specify the output ELF file
 set(TARGET_ELF "${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.elf")
+set(FLASH_ADDRESS "0x70000000")
 # Command to generate .bin file
 add_custom_command(
         TARGET ${CMAKE_PROJECT_NAME}
@@ -114,4 +115,12 @@ add_custom_command(
         COMMAND ${STM32CubeProgrammerCLI_Path}
         -bin ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.bin -nk -of 0x80000000 -t fsbl -hv 2.3 -dump ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.signed.bin -align -o ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.signed.bin -s
         COMMENT "Signing .bin file"
+)
+
+add_custom_command(
+        TARGET ${CMAKE_PROJECT_NAME}
+        POST_BUILD
+        COMMAND ${CMAKE_OBJCOPY}
+        -I binary -O elf32-littlearm -B arm --change-addresses=${FLASH_ADDRESS} ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.signed.bin ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.signed.elf
+        COMMENT "Signing .elf file\n"
 )

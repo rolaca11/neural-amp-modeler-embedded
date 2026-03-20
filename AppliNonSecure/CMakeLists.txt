@@ -54,12 +54,16 @@ enable_language(C ASM)
 # Add include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined include paths
+    ${CMAKE_CURRENT_SOURCE_DIR}/../Drivers/CMSIS/DSP/Include
 )
 
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
     ${CMAKE_CURRENT_SOURCE_DIR}/Core/Src/fir_filter.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/Core/Src/uart_io.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../Drivers/CMSIS/DSP/Source/FilteringFunctions/arm_fir_f32.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../Drivers/CMSIS/DSP/Source/FilteringFunctions/arm_fir_init_f32.c
 )
 
 # Link directories setup
@@ -90,6 +94,7 @@ endif()
 
 # Specify the output ELF file
 set(TARGET_ELF "${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.elf")
+set(FLASH_ADDRESS "0x70200000")
 # Command to generate .bin file
 add_custom_command(
         TARGET ${CMAKE_PROJECT_NAME}
@@ -115,4 +120,12 @@ add_custom_command(
         COMMAND ${STM32CubeProgrammerCLI_Path}
         -bin ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.bin -nk -of 0x80000000 -t fsbl -hv 2.3 -dump ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.signed.bin -align -o ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.signed.bin -s
         COMMENT "Signing .bin file"
+)
+
+add_custom_command(
+        TARGET ${CMAKE_PROJECT_NAME}
+        POST_BUILD
+        COMMAND ${CMAKE_OBJCOPY}
+        -I binary -O elf32-littlearm -B arm --change-addresses=${FLASH_ADDRESS} ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.signed.bin ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.signed.elf
+        COMMENT "Signing .elf file\n"
 )
